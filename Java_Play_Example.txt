@@ -1,0 +1,37 @@
+class Timing {
+	public String url;
+	public long latency;
+
+	public Timing(String url, long latency) {
+		this.url = url;
+		this.latency = latency;
+	}
+
+	public static Promise<Timing> timedRequest(final String url) {
+		final long start = System.currentTimeMillis();
+		Promise<WS.Response> res = WS.url(url).get();
+
+		return res.map(new Function<Response, Timing>() {
+			public Timing apply(Response response) {
+				long latency = System.currentTimeMillis() - start;
+				return new Timing(url, latency);
+			}
+		});
+	}
+}
+
+public class Parallel extends Controller {
+	public static Result index() {
+		Promise<List<Timing>> all = Promise.waitAll(
+			Timing.timedRequest("http://www.yahoo.com"),
+			Timing.timedRequest("http://www.google.com"),
+			Timing.timedRequest("http://www.bing.com")
+		);
+
+		return async(all.map(new Function<List<Timing>, Result>() {
+			public Result apply(List<Timing> timings) {
+				return ok(Json.toJson(timings));
+			}
+		}));
+	}
+}
