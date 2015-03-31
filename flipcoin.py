@@ -33,14 +33,13 @@ def calculate_adjacency(coins):
     return sum([c.adjacency for c in coins])
 
 def flip_coin(coins):
-    flipped = False
     for coin in coins:
-        if coin.previous_coin is None or coin.next_coin is None or flipped:
+        if coin.previous_coin is None or coin.next_coin is None:
             continue
         #if coin.heads != coin.previous_coin.heads and coin.previous_coin.heads == coin.next_coin.heads:
         if coin.heads != coin.previous_coin.heads and coin.adjacency == 0:
             coin.flip()
-            flipped = True
+            return #because we want to flip on the first eligible coin
 
 if __name__ == '__main__':
     import random
