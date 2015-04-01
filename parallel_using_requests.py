@@ -18,12 +18,15 @@ def timed_request(url):
 
 @asyncio.coroutine
 def fetch_page(url):
-    response = requests.get(url)
-    assert response.status_code == 200
-    return response.text
+    try:
+        response = requests.get(url)
+        assert response.status_code == 200
+        return response.text
+    except requests.exceptions.ConnectionError as ce:
+        return None
 
 def main():
-    urls = ('http://www.google.com', 'http://www.yahoo.com', 'http://www.bing.com', 'http://www.google.co.in')
+    from test_urls import urls
     loop = asyncio.new_event_loop()
     try:
         asyncio.set_event_loop(loop)

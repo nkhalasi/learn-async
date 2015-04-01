@@ -4,7 +4,7 @@ from datetime import datetime as dt
 
 def fetch_pages(urls):
     timings = {}
-    with concurrent.futures.ThreadPoolExecutor(max_workers=2) as executor:
+    with concurrent.futures.ThreadPoolExecutor(max_workers=5) as executor:
         future_to_url = {executor.submit(timed_request, url): url for url in urls}
         for f in concurrent.futures.as_completed(future_to_url.keys()):
             url = future_to_url[f]
@@ -26,7 +26,7 @@ def fetch_page(url):
     return r.text
 
 def main():
-    urls = ('http://www.google.com', 'http://www.yahoo.com', 'http://www.bing.com', 'http://www.google.co.in')
+    from test_urls import urls
     print(fetch_pages(urls))
 
 if __name__ == "__main__":

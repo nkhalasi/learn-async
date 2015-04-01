@@ -20,7 +20,7 @@ def fetch_page(url):
     return r.text if r.status_code == 200 else None
 
 def main():
-    urls = ('http://www.google.com', 'http://www.yahoo.com', 'http://www.bing.com', 'http://www.google.co.in')
+    from test_urls import urls
     print(fetch_pages(urls))
 
 if __name__ == "__main__":

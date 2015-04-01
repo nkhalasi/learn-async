@@ -23,7 +23,7 @@ def fetch_page(url):
     return (yield from response.read())
 
 def main():
-    urls = ('http://www.google.com', 'http://www.yahoo.com', 'http://www.bing.com', 'http://www.google.co.in')
+    from test_urls import urls
     loop = asyncio.new_event_loop()
     try:
         asyncio.set_event_loop(loop)
