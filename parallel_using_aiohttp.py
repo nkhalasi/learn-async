@@ -18,9 +18,12 @@ def timed_request(url):
 
 @asyncio.coroutine
 def fetch_page(url):
-    response = yield from aiohttp.request('GET', url)
-    assert response.status == 200
-    return (yield from response.read())
+    try:
+        response = yield from aiohttp.request('GET', url)
+        assert response.status == 200
+        return (yield from response.read())
+    except aiohttp.errors.ClientResponseError as cre:
+        return None
 
 def main():
     from test_urls import urls
