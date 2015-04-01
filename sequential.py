@@ -15,8 +15,9 @@ def timed_request(url):
 
 def fetch_page(url):
     r = requests.get(url)
-    assert r.status_code == 200
-    return r.text
+    #assert r.status_code == 200
+    #return r.text
+    return r.text if r.status_code == 200 else None
 
 def main():
     urls = ('http://www.google.com', 'http://www.yahoo.com', 'http://www.bing.com', 'http://www.google.co.in')
