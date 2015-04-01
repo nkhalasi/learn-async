@@ -1,23 +1,20 @@
 import asyncio
 import aiohttp
 from datetime import datetime as dt
-from contextlib import closing
 
-@asyncio.coroutine
-def fetch_urls(urls):
+def fetch_pages(urls, loop):
+    done_tasks, pending_tasks = loop.run_until_complete(asyncio.wait([timed_request(url) for url in urls]))
     timings = {}
-    for url in urls:
-        _, timing = yield from timed_request(url)
+    for task in done_tasks:
+        url, _, timing = task.result()
         timings[url] = timing
     return timings
 
 @asyncio.coroutine
 def timed_request(url):
     start = dt.now()
-    #print('Invoking async call to fetch {}'.format(url))
     res_details = yield from fetch_page(url)
-    #print('Done fetching {0}'.format(url))
-    return res_details, dt.now() - start
+    return url, res_details, dt.now() - start
 
 @asyncio.coroutine
 def fetch_page(url):
@@ -30,7 +27,7 @@ def main():
     loop = asyncio.new_event_loop()
     try:
         asyncio.set_event_loop(loop)
-        x = loop.run_until_complete(fetch_urls(urls))
+        x = fetch_pages(urls, loop)
         print(x)
     finally:
         loop.close()
